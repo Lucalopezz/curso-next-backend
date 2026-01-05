@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common';
+import { LoginDto } from './dto/login.dto';
 
 @Injectable()
 export class AuthService {
-  doLogin() {
-    return 'Ola do auth';
+  doLogin(loginDto: LoginDto) {
+    console.log(loginDto instanceof LoginDto, loginDto);
+    return loginDto;
   }
 }
