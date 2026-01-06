@@ -1,18 +1,15 @@
 import { InternalServerErrorException, Module } from '@nestjs/common';
-
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { UserModule } from 'src/user/user.module';
 import { CommonModule } from 'src/common/common.module';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './jwt.strategy';
-import { PassportModule } from '@nestjs/passport';
 
 @Module({
   imports: [
     UserModule,
     CommonModule,
-    PassportModule,
     JwtModule.registerAsync({
       useFactory: () => {
         const secret = process.env.JWT_SECRET;
@@ -28,7 +25,9 @@ import { PassportModule } from '@nestjs/passport';
 
         return {
           secret,
-          signOptions: { expiresIn },
+          signOptions: {
+            expiresIn,
+          },
         };
       },
     }),

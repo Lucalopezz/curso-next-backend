@@ -31,16 +31,9 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: JwtPayload) {
-    console.log('=== JWT VALIDATE ===');
-    console.log('Payload recebido:', payload);
     const user = await this.userService.findById(payload.sub);
-    console.log('Usuário encontrado:', user ? 'SIM' : 'NÃO');
 
     if (!user || user.forceLogout) {
-      console.log(
-        'Razão da falha:',
-        !user ? 'usuário não encontrado' : 'forceLogout ativo',
-      );
       throw new UnauthorizedException('Você precisa fazer login');
     }
 
