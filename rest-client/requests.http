@@ -30,3 +30,17 @@ Content-Type: application/json
 # @name readOneUser
 GET {{baseUrl}}/user/123
 Authorization: Bearer {{jwtToken}}
+
+
+
+
+
+### Update user
+# @name updateUser
+PATCH {{baseUrl}}/user/me
+Content-Type: application/json
+Authorization: Bearer {{jwtToken}}
+
+{
+  "name": "Lucas2"
+}
