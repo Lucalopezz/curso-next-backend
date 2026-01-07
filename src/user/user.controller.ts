@@ -15,7 +15,7 @@ import { UserService } from './user.service';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import type { AuthenticatedRequest } from 'src/auth/types/authenticated-request';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { UserResponseDto } from 'src/post/dto/user-response.dto';
+import { UserResponseDto } from 'src/user/dto/user-response.dto';
 
 @Controller('user')
 export class UserController {
