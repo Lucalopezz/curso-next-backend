@@ -24,6 +24,7 @@ export class UserController {
     private readonly userService: UserService,
   ) {}
 
+  @UseGuards(JwtAuthGuard)
   @Get('me')
   async findOne(@Req() req: AuthenticatedRequest) {
     const user = await this.userService.findOneByOrFail({ id: req.user.id });
