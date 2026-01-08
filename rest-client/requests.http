@@ -1,5 +1,17 @@
-@baseUrl = http://localhost:3000 
+@baseUrl = http://localhost:3000
 @jwtToken = {{authLogin.response.body.accessToken}}
+
+@postUuid = {{createPostOwned.response.body.id}}
+@postSlug = {{createPostOwned.response.body.slug}}
+@imagePath = {{uploadImage.response.body.url}}
+@imageUrl = {{baseUrl}}{{imagePath}}
+
+@userNameForTesting = Lucas
+@userEmailForTesting = lucas@email.com
+@userPasswordForTesting = 123456
+@userNewPasswordForTesting = 123456
+
+# AUTH ########################################################################
 
 ### Auth login
 # @name authLogin
@@ -7,13 +19,11 @@ POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
-  "email": "user1@email.com",
-  "password": "123456"
+  "email": "{{userEmailForTesting}}",
+  "password": "{{userPasswordForTesting}}"
 }
 
-
-
-
+# USER ########################################################################
 
 ### Create user
 # @name createUser
@@ -21,19 +31,10 @@ POST {{baseUrl}}/user
 Content-Type: application/json
 
 {
-  "name": "Lucas",
-  "email": "user1@email.com",
-  "password": "123456"
+  "name": "{{userNameForTesting}}",
+  "email": "{{userEmailForTesting}}",
+  "password": "{{userPasswordForTesting}}"
 }
-
-### Read one user
-# @name readOneUser
-GET {{baseUrl}}/user/123
-Authorization: Bearer {{jwtToken}}
-
-
-
-
 
 ### Update user
 # @name updateUser
@@ -42,7 +43,8 @@ Content-Type: application/json
 Authorization: Bearer {{jwtToken}}
 
 {
-  "name": "Lucas2"
+  "name": "{{userNameForTesting}}",
+  "email": "{{userEmailForTesting}}"
 }
 
 ### Update user password
@@ -52,8 +54,8 @@ Content-Type: application/json
 Authorization: Bearer {{jwtToken}}
 
 {
-  "currentPassword": "123456",
-  "newPassword": "1234567"
+  "currentPassword": "{{userPasswordForTesting}}",
+  "newPassword": "{{userNewPasswordForTesting}}"
 }
 
 ### Read one user
@@ -65,3 +67,74 @@ Authorization: Bearer {{jwtToken}}
 # @name deleteOneUser
 DELETE {{baseUrl}}/user/me
 Authorization: Bearer {{jwtToken}}
+
+# POST ########################################################################
+
+### Create post owned
+# @name createPostOwned
+POST {{baseUrl}}/post/me
+Content-Type: application/json
+Authorization: Bearer {{jwtToken}}
+
+{
+  "title": "Título do post",
+  "excerpt": "Excerto",
+  "content": "Conteúdo"
+}
+
+### Read all post public
+# @name readAllPostPublic
+GET {{baseUrl}}/post/
+
+### Read one post public
+# @name readOnePostPublic
+GET {{baseUrl}}/post/{{postSlug}}
+
+### Read all post owned
+# @name readAllPostOwned
+GET {{baseUrl}}/post/me
+Authorization: Bearer {{jwtToken}}
+
+### Read one post owned
+# @name readOnePostOwned
+GET {{baseUrl}}/post/me/{{postUuid}}
+Authorization: Bearer {{jwtToken}}
+
+### Update one post owned
+# @name updateOnePostOwned
+PATCH {{baseUrl}}/post/me/{{postUuid}}
+Content-Type: application/json
+Authorization: Bearer {{jwtToken}}
+
+{
+  "title": "NOVO - Título do post",
+  "excerpt": "NOVO - Excerto",
+  "content": "NOVO - Conteúdo",
+  "published": true
+}
+
+### Delete one post owned
+# @name deleteOnePostOwned
+DELETE {{baseUrl}}/post/me/{{postUuid}}
+Authorization: Bearer {{jwtToken}}
+
+# UPLOAD ######################################################################
+
+### Upload Image
+# @name uploadImage
+POST {{baseUrl}}/upload
+Authorization: Bearer {{jwtToken}}
+Content-Type: multipart/form-data; boundary=----BryenFormBoundary
+
+------BryenFormBoundary
+Content-Disposition: form-data; name="file"; filename="exemplo.png"
+Content-Type: image/png
+
+< ../dev/images/sample-image.jpeg
+------BryenFormBoundary--
+
+### Read Image
+# @name readImage
+GET {{imageUrl}}
+
+###############################################################################
