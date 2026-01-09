@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Post } from './entities/post.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -36,5 +41,57 @@ export class PostService {
       });
 
     return created;
+  }
+
+  async findOneOwned(postData: Partial<Post>, author: User) {
+    const post = await this.postRepository.findOne({
+      where: {
+        ...postData,
+        author: {
+          id: author.id,
+        },
+      },
+      relations: ['author'],
+    });
+
+    return post;
+  }
+
+  async findOneOwnedOrFail(postData: Partial<Post>, author: User) {
+    const post = await this.findOneOwned(postData, author);
+    if (!post) {
+      throw new NotFoundException('Post não encontrado');
+    }
+
+    return post;
+  }
+  async findOne(postData: Partial<Post>) {
+    const post = await this.postRepository.findOne({
+      where: postData,
+      relations: ['author'],
+    });
+
+    return post;
+  }
+  async findOneOrFail(postData: Partial<Post>) {
+    const post = await this.findOne(postData);
+    if (!post) {
+      throw new NotFoundException('Post não encontrado');
+    }
+    return post;
+  }
+
+  async findAllOwned(author: User) {
+    const post = await this.postRepository.find({
+      where: {
+        author: { id: author.id },
+      },
+      order: {
+        createdAt: 'DESC',
+      },
+      relations: ['author'],
+    });
+
+    return post;
   }
 }
