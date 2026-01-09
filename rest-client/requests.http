@@ -79,7 +79,9 @@ Authorization: Bearer {{jwtToken}}
 {
   "title": "Título do post",
   "excerpt": "Excerto bem grandão, ele precisa ter 10 caraceteres",
-  "content": "Conteúdo"
+  "content": "Conteúdo",
+
+  "coverImageUrl": "http://localhost"
 }
 
 ### Read all post public
