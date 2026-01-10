@@ -111,4 +111,14 @@ export class PostService {
 
     return this.postRepository.save(post);
   }
+  async remove(postData: Partial<Post>, author: User) {
+    const post = await this.findOneOrFail(postData);
+    await this.postRepository.delete({
+      ...postData,
+      author: {
+        id: author.id,
+      },
+    });
+    return post;
+  }
 }
