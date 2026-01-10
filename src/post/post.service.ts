@@ -95,6 +95,17 @@ export class PostService {
 
     return post;
   }
+  async findAll(postData: Partial<Post>) {
+    const posts = await this.postRepository.find({
+      where: postData,
+      order: {
+        createdAt: 'DESC',
+      },
+      relations: ['author'],
+    });
+
+    return posts;
+  }
 
   async update(postData: Partial<Post>, dto: UpdatePostDto, author: User) {
     if (Object.keys(dto).length === 0) {
